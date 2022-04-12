@@ -3,15 +3,16 @@
 // include librarys
 #include <SPI.h>
 #include <NRF24.h>
-#include <Arduino_AVRSTL.h>
+//#include <Arduino_AVRSTL.h>
 
 // Define pins
-double currentTime;
-double previousTime;
+
 
 
 // Define variables
-double pidControl(const double currentPosition, const double targetPosition);
+
+
+double pidControl(const double setPoint, const double currentPosition, const double targetPosition);
 
 
 // Function prototypes
