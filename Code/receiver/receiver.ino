@@ -12,7 +12,8 @@ void setup()
 
   radio.begin(9, 10);
 
-  tx = 0;
+  pinMode(7,INPUT_PULLUP);
+  tx = !digitalRead(7);
 
   if (tx)
   {
