@@ -14,6 +14,11 @@
 
 double pidControl(const double setPoint, const double currentPosition, const double targetPosition);
 
+// borderCheck function: check if the robot reaches the border
+// Input: Robot current x and y coordinates
+// Output: ture if it reaches the border, false if it not
+boolean borderCheck(const double x, const double y);
+
 
 // Function prototypes
 

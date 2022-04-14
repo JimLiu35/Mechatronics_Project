@@ -23,3 +23,21 @@ double pidControl(const double setPoint, const double currentPosition, const dou
 
   return output;
 }
+
+boolean borderCheck(const double x, const double y)
+{
+  boolean atBorder = false;
+  double botRadius = 8;         // robot radius in mm
+  double xBorder1 = 0;          
+  double xBorder2 = 2100;       // in mm
+  double yBorder1 = 0;
+  double yBorder2 = 1050;       // in mm
+  if (x - botRadius <= xBorder1 || x + botRadius >= xBorder2)
+    atBorder = true;
+  else if (y - botRadius <= yBorder1 || y + botRadius >= yBorder2)
+    atBorder = true;
+  else
+    atBorder = false;
+
+  return atBorder;
+}
