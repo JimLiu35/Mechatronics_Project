@@ -28,7 +28,7 @@ double pidControl(const double setPoint, const double currentPosition, const dou
 // borderCheck function: check if the robot reaches the border
 // Input: Robot current x and y coordinates
 // Output: ture if it reaches the border, false if it not
-boolean borderCheck(const struct Bot robot);
+boolean borderCheck(const Bot robot);
 
 
 

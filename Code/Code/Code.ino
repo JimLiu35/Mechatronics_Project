@@ -1,6 +1,7 @@
 #include "Code.h"
 
 uint8_t robotStates;    // Create global state variable
+
 boolean puckCaptured = false;
 void setup() {
   // put your setup code here, to run once:
@@ -19,7 +20,7 @@ void loop() {
       */
 
       // Code here
-      boolean receiveSignal = false;
+      static boolean receiveSignal = false;
       // function
 
       if (receiveSignal == false)
