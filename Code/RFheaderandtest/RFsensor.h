@@ -4,7 +4,13 @@
 #include<SPI.h>
 #include<NRF24.h>
 
-char *RF_receiver(uint8_t pin_CE, uint8_t pin_CSN, uint8_t address);
-bool RF_sender(uint8_t pin_CE, uint8_t pin_CSN,uint8_t address ,char *content);
+
+
+
+
+
+void initial_RF(uint8_t pin_CE,uint8_t pin_CSN,NRF24* radio, uint8_t address, bool flag);
+char *RF_receiver(NRF24* radio);
+bool RF_sender(char *content,NRF24* radio);
 
 #endif
