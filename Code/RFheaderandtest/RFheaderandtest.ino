@@ -25,7 +25,11 @@ void loop(){
   
   // test receiver
   //res = RF_receiver(&radio);
-  //Serial.println(res);
-  
+  //if (res == NULL){
+  //  Serial.println("empty");
+  //}
+  //else{
+  //  Serial.println(res);
+  //}
   delay(10);
 }

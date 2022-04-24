@@ -28,12 +28,14 @@ bool RF_sender(char *content,NRF24* radio)
 
 char *RF_receiver(NRF24* radio)
 {
-  
   if(radio->available()){
     char buf[32];
     uint8_t numBytes = radio->read(buf,sizeof(buf));
-    //Serial.println(numBytes);
     char *content = buf;
+    return content;
+  }
+  else{
+    char*content = NULL;
     return content;
   }
 }
