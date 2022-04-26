@@ -1,27 +1,41 @@
 #include "RFsensor.h"
-bool RF_sender(uint8_t pin_CE,uint8_t pin_CSN,uint8_t address ,char *content)
+
+void initial_RF(uint8_t pin_CE,uint8_t pin_CSN,NRF24* radio, uint8_t address, bool flag){
+  radio->begin(pin_CE,pin_CSN);
+  // flag = 0 sender
+  // flag = 1 receiver
+  
+  if (flag){
+    radio->listenToAddress(address);
+  }
+  else{
+    radio->setAddress(address);
+  }
+}
+
+
+
+
+
+
+bool RF_sender(char *content,NRF24* radio)
 {
-  NRF24 radio;
-  //Serial.begin(115200);
-  radio.begin(pin_CE,pin_CSN);
-  radio.setAddress(address);
   bool res;
-  res = radio.broadcast(content);
+  res = radio->broadcast(content);
   return res;
 }
 
-char *RF_receiver(uint8_t pin_CE, uint8_t pin_CSN, uint8_t address)
+
+char *RF_receiver(NRF24* radio)
 {
-  NRF24 radio;
-  radio.begin(pin_CE,pin_CSN);
-  radio.listenToAddress(address);
-  delay(20);
-  if(radio.available()){
-    Serial.println("ok");
+  if(radio->available()){
     char buf[32];
-    uint8_t numBytes = radio.read(buf,sizeof(buf));
-    //Serial.println(numBytes);
+    uint8_t numBytes = radio->read(buf,sizeof(buf));
     char *content = buf;
+    return content;
+  }
+  else{
+    char*content = NULL;
     return content;
   }
 }
