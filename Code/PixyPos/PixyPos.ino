@@ -1,16 +1,19 @@
+#include "PixyPos.h"
 #include <Pixy2.h>
+#include <DRV8835MotorShield.h>
+uint8_t M1DIR = 2;
+uint8_t M1PWM = 3;
+uint8_t M2DIR = 4;
+uint8_t M2PWM = 5;
+DRV8835MotorShield motors = DRV8835MotorShield(M1DIR, M1PWM, M2DIR, M2PWM);
+
 Pixy2 pixy;
+
 const int viewCenter_x = 158;
 const int viewCenter_y = 100;
-boolean isinField = false;
-struct object {
-  int colorSig;
-  int object_x;
-  int object_y;
-};
 
 object puck;
-
+boolean isinField;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -21,20 +24,32 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   int i;
-  pixy.ccc.getBlocks();
-  if (pixy.ccc.blocks[i].m_signature == puck.colorSig)
-  {
-    puck.object_x = pixy.ccc.blocks[i].m_x;
-    puck.object_y = pixy.ccc.blocks[i].m_y;
-    isinField = true;
+  isinField = objPosition(puck, i, pixy);
+
+  //  Serial.println(isinField);
+  if (isinField) {
+    if (puck.object_x - viewCenter_x < -10)
+    {
+      // Move to left
+      motors.setM2Speed(400);
+      motors.setM1Speed(200);
+    }
+    else if (puck.object_x - viewCenter_x > 10)
+    {
+      // Move to right
+      motors.setM2Speed(200);
+      motors.setM1Speed(400);
+    }
+    else
+    {
+      motors.setM2Speed(400);
+      motors.setM1Speed(400);
+    }
   }
   else
-    isinField = false;
-//  if (abs(puck.object_x - viewCenter_x) <= 5 && abs(puck.object_y - viewCenter_y) <= 5)
-//  {
-//    Serial.println("At Center!");
-//  }
-//  else
-//    Serial.println("Not at center!");
+  {
+    motors.setM2Speed(0);
+    motors.setM1Speed(-0);
+  }
 
 }
