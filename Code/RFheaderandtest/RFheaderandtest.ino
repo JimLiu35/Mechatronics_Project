@@ -1,7 +1,7 @@
 #include "RFsensor.h"
-const int pin_CE = 9;
-const int pin_CSN = 10;
-const int address = 0xD2;
+//const int pin_CE = 9;
+//const int pin_CSN = 10;
+//const int address = 0xD2;
 NRF24 radio;
 // for reciver
 char *res;
@@ -13,9 +13,9 @@ char* content = (char*)"this is from xys";
 void setup(){
   Serial.begin(115200);
   //test sender
-  initial_RF(pin_CE,pin_CSN,&radio,address,0);
+  initial_RF(&radio,0);
   //test receiver
-  //initial_RF(pin_CE,pin_CSN,&radio,address,1);
+  //initial_RF(&radio,1);
 }
 
 void loop(){
