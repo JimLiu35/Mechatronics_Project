@@ -4,6 +4,7 @@ int pdControl(object& robot, object& obj, int type)
 {
   type = 2;
   double Setpoint, Input, Output;
+  float coordinates[6];
   sensors_event_t event;
   Adafruit_BNO055 bno;
   bno = initial_IMU();
@@ -21,12 +22,13 @@ int pdControl(object& robot, object& obj, int type)
 
   while (1 < 2) {
     res_y = return_IMU_y(&event, bno);
-    res = RF_receiver(&radio);    // ?? what kind of format does the data in res have??
-    robot.x = res[0];
-    robot.y = res[1];
-    robot.theta = res[2];
-    obj.x = res[3];
-    obj.y = res[4];
+    res = RF_receiver(&radio);   
+    Getcoordinates(res, coordinates);
+    robot.x = coordinates[0];
+    robot.y = coordinates[1];
+    robot.theta = res_y;
+    obj.x = coordinates[2];
+    obj.y = coordinates[3];
     obj.theta = NULL;
 
     if (type == 2) {
@@ -41,7 +43,19 @@ int pdControl(object& robot, object& obj, int type)
       }
       myPID.Compute();
       int speedAdj = constrain(Output, -400, 400);
-      return speedAdj;
+      if (ang_diff < 0) {
+        // Move to right
+        motors.setM2Speed(200);
+        motors.setM1Speed(400);
+      }
+      else if{
+        // Move to left
+        motors.setM2Speed(400);
+        motors.setM1Speed(200);
+      }
+      else{
+        break;
+      }
     }
 
   }
