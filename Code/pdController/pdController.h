@@ -6,6 +6,7 @@
 #include <math.h>
 #include "RFsensor.h"
 #include "Getcoordinates.h"
+#include <DRV8835MotorShield.h>
 
 #define PIN_OUTPUT 3
 #define posControl 1
@@ -16,7 +17,7 @@ struct object {
   int theta;
 };
 
-int pdControl(object& robot, object& obj, int type);
+void pdControl(object& robot, object& obj, int type);
 // Output a value of speed adjustment to current motor speed.
 
 #endif
