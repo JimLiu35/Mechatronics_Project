@@ -7,7 +7,7 @@ NRF24 radio;
 char *res;
 // for sender
 bool result;
-char* content = (char*)"this is from xys";
+char* content = (char*)"12.2342.34,23.4556.78,12.5635.78";
 
 
 void setup(){
