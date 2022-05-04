@@ -13,23 +13,23 @@ char* content = (char*)"12.2342.34,23.4556.78,12.5635.78";
 void setup(){
   Serial.begin(115200);
   //test sender
-  initial_RF(&radio,0);
+//  initial_RF(&radio,0);
   //test receiver
-  //initial_RF(&radio,1);
+  initial_RF(&radio,1);
 }
 
 void loop(){
   // test sender
-  result = RF_sender(content,&radio);
-  Serial.println(result);
+//  result = RF_sender(content,&radio);
+//  Serial.println(result);
   
   // test receiver
-  //res = RF_receiver(&radio);
-  //if (res == NULL){
-  //  Serial.println("empty");
-  //}
-  //else{
-  //  Serial.println(res);
-  //}
+  res = RF_receiver(&radio);
+  if (res == NULL){
+//    Serial.println("empty");
+  }
+  else{
+    Serial.println(res);
+  }
   delay(10);
 }
