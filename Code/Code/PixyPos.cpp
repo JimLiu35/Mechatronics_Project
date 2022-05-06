@@ -1,7 +1,7 @@
 #include "PixyPos.h"
 #include <Arduino.h>
 
-boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy) {
+boolean objPosition(object &obj, int loopIndex, Pixy2 pixy) {
   boolean isinField;
   pixy.ccc.getBlocks();
   if (pixy.ccc.blocks[loopIndex].m_signature == obj.colorSig)

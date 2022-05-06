@@ -2,7 +2,7 @@
 #define PIXYPOS_H_
 
 #include <Arduino.h>
-#include <Pixy2I2C.h>
+#include <Pixy2.h>
 #include <DRV8835MotorShield.h>
 
 struct object {
@@ -11,7 +11,7 @@ struct object {
   int object_y;
 };
 
-boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy);
+boolean objPosition(object &obj, int loopIndex, Pixy2 pixy);
 
 
 #endif
