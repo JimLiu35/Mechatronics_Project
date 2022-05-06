@@ -3,6 +3,10 @@
 // include librarys
 #include <SPI.h>
 #include <NRF24.h>
+#include "Getcoordinates.h"
+#include "RFsensor.h"
+#include "pdController.h"
+#include <DRV8835MotorShield.h>
 //#include <Arduino_AVRSTL.h>
 
 // Define pins
@@ -14,11 +18,11 @@
 #define Defending 3
 
 // Define variables
-struct Bot {
-  // Can store robots' or puck's coordinates
-  double x;
-  double y;
-};
+//struct Bot {
+//  int x;
+//  int y;
+//  int theta;
+//};
 
 
 // Function prototypes
