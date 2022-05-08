@@ -30,6 +30,7 @@ void setup() {
   Goal.x = 0;
   Goal.y = 0;
   Goal.theta = NULL;
+//  Serial.println("Inializing...");
 }
 
 void loop() {
@@ -44,6 +45,7 @@ void loop() {
       */
       // Code here
       // function
+//      Serial.println(robotStates);
       matchStatus = RF_receiver(&radio, num);                  // Read RF
 //      Serial.println(matchStatus);
       if (matchStatus == 1)
@@ -66,7 +68,7 @@ void loop() {
       // Need a trajectory generating function return a vector of states?
       // Need a trajectory tracking function to follow the generated path
       // Need a boolean type function to check if the puck is captured
-//      Serial.println(robotStates);
+      Serial.println(robotStates);
       puckCaptured = false;
       // functions
       // 1. Get coordinates of robot and the puck
@@ -83,7 +85,11 @@ void loop() {
       float distFP = sqrt(pow((robotForward.x - Puck.x),2) + pow((robotForward.y - Puck.y),2));   // Distance between robotForward and Puck
       
       if (distFP > 30)
+      {
+//        Serial.println("Working!!!");
         pdControl(robotForward, Puck);
+      }
+        
       else
       {
         // pixy control

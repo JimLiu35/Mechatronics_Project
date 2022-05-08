@@ -44,6 +44,7 @@ int RF_receiver(NRF24* radio, float*num)
       if (flag == 3) {
         Getcoordinates(buf, num);
       }
+//      Serial.println(buf);
       return flag;
     }
   }

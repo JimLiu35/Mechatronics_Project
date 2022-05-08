@@ -25,6 +25,7 @@ bool RF_sender(char *content, NRF24* radio)
 {
   bool res;
   res = radio->broadcast(content);
+  Serial.println(content);
   return res;
 }
 
