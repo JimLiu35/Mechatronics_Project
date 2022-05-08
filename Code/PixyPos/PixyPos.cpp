@@ -1,7 +1,9 @@
 #include "PixyPos.h"
 #include <DRV8835MotorShield.h>
 #include <Arduino.h>
-
+#include <IRremote.h>
+const byte IR_RECEIVE_PIN = 6;
+const int IR_LED = 7;
 //object puck;
 //boolean isinField;
 
@@ -54,27 +56,30 @@ boolean pixyControl(object& robot, object& puck) {
         motors.setM2Speed(200);
         motors.setM1Speed(200);
         delay(1000);
-        bool puckCapture = puckCaptureCheck()
-//       capture the puck
-        if (puckCapture == true){
-        motors.setM2Speed(0);
-        motors.setM1Speed(0);
-        delay(3000);
-        catchPuck = true;
-        else 
-        catchPuck = false;
-        
+        bool puckCapture = puckCaptureCheck();
+        //       capture the puck
+        if (puckCapture == true) {
+          motors.setM2Speed(0);
+          motors.setM1Speed(0);
+          delay(3000);
+          catchPuck = true;
+        }
+        else
+        {
+          catchPuck = false;
 
+
+        }
       }
-    }
-    if (catchPuck == true) {
-      return catchPuck;
-    }
+      if (catchPuck == true) {
+        return catchPuck;
+      }
 
+    }
   }
 }
 
-boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy) {
+boolean objPosition(object & obj, int loopIndex, Pixy2I2C pixy) {
   boolean isinField;
   pixy.ccc.getBlocks();
   if (pixy.ccc.blocks[loopIndex].m_signature == obj.colorSig)
@@ -87,10 +92,11 @@ boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy) {
     isinField = false;
   //  Serial.println(isinField);
   return isinField;
+}
 
 
 
-  
+
 boolean puckCaptureCheck()
 {
   int result = 0;
@@ -126,5 +132,4 @@ boolean puckCaptureCheck()
     Serial.println("Nothing");
     return false;
   }
-}
 }
