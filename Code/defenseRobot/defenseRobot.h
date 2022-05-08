@@ -14,6 +14,7 @@
 #define Initialize 0
 #define Inplace 1
 #define Defending 2
+#define Stop 3
 
 
 double pidControl(const double setPoint, const double currentPosition, const double targetPosition);
