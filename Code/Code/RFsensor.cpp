@@ -3,7 +3,7 @@
 void initial_RF(NRF24* radio, bool flag) {
   const int pin_CE = 9;
   const int pin_CSN = 10;
-  const int address = 0xD2;
+  const int address = 0xF2;
   radio->begin(pin_CE, pin_CSN);
   // flag = 0 sender
   // flag = 1 receiver
@@ -37,7 +37,7 @@ int RF_receiver(NRF24* radio, float*num)
     if (radio->available()) {
       char buf[32];
       uint8_t numBytes = radio->read(buf, sizeof(buf));
-      delay(10);
+      delay(40);
       //char *content = buf;
       flag = start_stop_message(buf);
 

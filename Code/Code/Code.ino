@@ -22,15 +22,20 @@ uint8_t M2DIR = 4;
 uint8_t M2PWM = 5;
 DRV8835MotorShield motors = DRV8835MotorShield(M1DIR, M1PWM, M2DIR, M2PWM);
 
+// pixy
+const int viewCenter_x = 158;
+const int viewCenter_y = 100;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   initial_RF(&radio, 1);
-  robotStates = Initialize;
-  Goal.x = 0;
-  Goal.y = 0;
+  robotStates = puckSearching;
+  Goal.x = 230;
+  Goal.y = 65;
   Goal.theta = NULL;
-//  Serial.println("Inializing...");
+  pinMode(IR_LED, OUTPUT);
+  //  Serial.println("Inializing...");
 }
 
 void loop() {
@@ -45,14 +50,16 @@ void loop() {
       */
       // Code here
       // function
-//      Serial.println(robotStates);
+      //      Serial.println(robotStates);
+      //      digitalWrite(IR_LED,HIGH);
       matchStatus = RF_receiver(&radio, num);                  // Read RF
-//      Serial.println(matchStatus);
+      //      Serial.println(matchStatus);
       if (matchStatus == 1)
         robotStates = puckSearching;
+
       else
         robotStates = Initialize;
-//      Serial.println(robotStates);
+      //      Serial.println(robotStates);
       break;
 
     case puckSearching:
@@ -68,28 +75,29 @@ void loop() {
       // Need a trajectory generating function return a vector of states?
       // Need a trajectory tracking function to follow the generated path
       // Need a boolean type function to check if the puck is captured
-      Serial.println(robotStates);
+      //      Serial.println(robotStates);
+      digitalWrite(IR_LED, HIGH);
       puckCaptured = false;
       // functions
       // 1. Get coordinates of robot and the puck
       matchStatus = RF_receiver(&radio, RF_coordinates);                   // Read RF & Get Coordinates
-      if (matchStatus == 2){
+      if (matchStatus == 2) {
         robotStates = Stop;
       }
-      robotForward.x = RF_coordinates[0];
-      robotForward.y = RF_coordinates[1];
-      Puck.x = RF_coordinates[2];
-      Puck.y = RF_coordinates[3];
+      robotForward.x = RF_coordinates[2];
+      robotForward.y = RF_coordinates[3];
+      Puck.x = RF_coordinates[4];
+      Puck.y = RF_coordinates[5];
       Puck.theta = NULL;
       // 2. PD control -- Alignment
-      float distFP = sqrt(pow((robotForward.x - Puck.x),2) + pow((robotForward.y - Puck.y),2));   // Distance between robotForward and Puck
-      
+      float distFP = sqrt(pow((robotForward.x - Puck.x), 2) + pow((robotForward.y - Puck.y), 2)); // Distance between robotForward and Puck
+
       if (distFP > 30)
       {
-//        Serial.println("Working!!!");
-        pdControl(robotForward, Puck);
+        //        Serial.println("Working!!!");
+        Control(robotForward, Puck);
       }
-        
+
       else
       {
         // pixy control
@@ -121,7 +129,7 @@ void loop() {
       // 2. PD control to goal
       float distFG = sqrt((robotForward.x - Goal.x) ^ 2 + (robotForward.y - Goal.y) ^ 2);     // Distance between robotForward and Goal
       if (distFG > 3000)
-        pdControl(robotForward, Goal);
+        Control(robotForward, Goal);
       else
       {
         // Moving forward
@@ -159,8 +167,8 @@ void loop() {
     case Stop:
 
 
-    break;
-    
+      break;
+
   }
 
 }

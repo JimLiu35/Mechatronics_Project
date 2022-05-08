@@ -5,7 +5,8 @@
 #include <NRF24.h>
 #include "Getcoordinates.h"
 #include "RFsensor.h"
-#include "pdController.h"
+//#include "pdController.h"
+#include "Controller.h"
 #include "IRCheck.h"
 #include <DRV8835MotorShield.h>
 //#include <Arduino_AVRSTL.h>
@@ -35,8 +36,6 @@ double pidControl(const double setPoint, const double currentPosition, const dou
 // Input: Robot current x and y coordinates
 // Output: ture if it reaches the border, false if it not
 boolean borderCheck(const Bot robot);
-
-boolean puckCaptureCheck();
 
 
 

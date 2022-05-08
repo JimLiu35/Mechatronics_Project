@@ -33,11 +33,11 @@ int start_stop_message(char * message){
   // ? 63 stop return 2
   // b or g message return 3
   char* test = message;
-  if (int(test[0]) == 33){
+  if (int(test[1]) == 33){
     // start
     return 1;
   }
-  else if (int(test[0]) == 63){
+  else if (int(test[1]) == 63){
     // stop
     return 2;
   }
