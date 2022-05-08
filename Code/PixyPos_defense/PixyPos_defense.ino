@@ -10,8 +10,8 @@ DRV8835MotorShield motors = DRV8835MotorShield(M1DIR, M1PWM, M2DIR, M2PWM);
 
 Pixy2I2C pixy;
 
-const int viewCenter_x = 158;
-const int viewCenter_y = 100;
+const int viewCenter_x = 157;
+const int viewCenter_y = 203;
 
 object puck;
 boolean isinField;
@@ -27,30 +27,40 @@ void loop() {
   int i;
   isinField = objPosition(puck, i, pixy);
 
-  //  Serial.println(isinField);
+//  Serial.println(isinField);
+
   if (isinField) {
     if (puck.object_x - viewCenter_x < -10)
     {
       // Move to left
-      motors.setM2Speed(400);
-      motors.setM1Speed(200);
+//      Serial.println("move to left");
+      motors.setM2Speed(-200);
+      motors.setM1Speed(-200);
     }
     else if (puck.object_x - viewCenter_x > 10)
     {
       // Move to right
+//      Serial.println("move to right");
       motors.setM2Speed(200);
-      motors.setM1Speed(400);
+      motors.setM1Speed(200);
     }
     else
     {
-      motors.setM2Speed(400);
-      motors.setM1Speed(400);
+//      Serial.println("right front to the ball");
+      motors.setM2Speed(0);
+      motors.setM1Speed(0);
+
     }
   }
   else
   {
-    motors.setM2Speed(0);
-    motors.setM1Speed(-0);
+//     Serial.println("wondering");
+    motors.setM2Speed(100);
+    motors.setM1Speed(100);
+    delay(200);
+    motors.setM2Speed(-100);
+    motors.setM1Speed(-100);
+    delay(200);
   }
 
 }

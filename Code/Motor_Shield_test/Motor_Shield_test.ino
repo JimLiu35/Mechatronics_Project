@@ -15,7 +15,8 @@ void setup()
 
 void loop()
 {
-    motors.setM2Speed(speed-100);     // right motor viewing from the rear
-    motors.setM1Speed(speed+200);     // left motor viewing from the rear
-    delay(2);
+//    motors.setM2Speed(speed);     // right motor viewing from the rear  // rear wheel positive move right 
+//    motors.setM1Speed(speed);     // left motor viewing from the rear
+     motors.setM2Speed(-speed);     // right motor viewing from the rear
+    motors.setM1Speed(-speed);     // left motor viewing from the rear
 }
