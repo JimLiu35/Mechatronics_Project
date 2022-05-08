@@ -12,6 +12,6 @@ struct object {
 };
 
 boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy);
-
+boolean pixyControl(object& robot, object& puck);
 
 #endif
