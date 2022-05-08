@@ -30,20 +30,20 @@ boolean pixyControl(object& robot, object& puck) {
       if (puck.object_x - viewCenter_x < -40)
       {
         // Move to left
-//           Serial.println("Working1");
+        //      Serial.println("Working1");
         motors.setM2Speed(200);
         motors.setM1Speed(100);
       }
       else if (puck.object_x - viewCenter_x > 40)
       {
         // Move to right
-//          Serial.println("Working2");
+        //      Serial.println("Working2");
         motors.setM2Speed(100);
         motors.setM1Speed(200);
       }
       else
       {
-//          Serial.println("Working3");
+        //      Serial.println("Working3");
         motors.setM2Speed(200);
         motors.setM1Speed(200);
       }
@@ -52,7 +52,7 @@ boolean pixyControl(object& robot, object& puck) {
     else
     {
       if (abs(puck.object_x - viewCenter_x) < 40 && puck.object_y > 150) {
-//        Serial.println("Working4");
+        //      Serial.println("Working4");
         motors.setM2Speed(200);
         motors.setM1Speed(200);
         delay(1000);
@@ -71,7 +71,6 @@ boolean pixyControl(object& robot, object& puck) {
 
         }
       }
-//      Serial.println(
       if (catchPuck == true) {
         return catchPuck;
       }
