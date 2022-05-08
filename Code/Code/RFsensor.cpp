@@ -1,5 +1,5 @@
 #include "RFsensor.h"
-
+#include "Getcoordinates.h"
 void initial_RF(NRF24* radio, bool flag) {
   const int pin_CE = 9;
   const int pin_CSN = 10;
@@ -29,16 +29,22 @@ bool RF_sender(char *content, NRF24* radio)
 }
 
 
-char *RF_receiver(NRF24* radio)
+int RF_receiver(NRF24* radio, float*num)
 {
-  if (radio->available()) {
-    char buf[32];
-    uint8_t numBytes = radio->read(buf, sizeof(buf));
-    char *content = buf;
-    return content;
-  }
-  else {
-    char*content = NULL;
-    return content;
+  int flag;
+  while (true) {
+//    Serial.println("Working1");
+    if (radio->available()) {
+      char buf[32];
+      uint8_t numBytes = radio->read(buf, sizeof(buf));
+      delay(10);
+      //char *content = buf;
+      flag = start_stop_message(buf);
+
+      if (flag == 3) {
+        Getcoordinates(buf, num);
+      }
+      return flag;
+    }
   }
 }

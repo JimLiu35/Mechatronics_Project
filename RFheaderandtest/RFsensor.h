@@ -10,7 +10,7 @@
 
 
 void initial_RF(NRF24* radio, bool flag);
-int RF_receiver(NRF24* radio,float*num);
+char *RF_receiver(NRF24* radio);
 bool RF_sender(char *content,NRF24* radio);
 
 #endif
