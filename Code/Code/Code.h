@@ -10,6 +10,8 @@
 //#include <Arduino_AVRSTL.h>
 
 // Define pins
+const byte IR_RECEIVE_PIN = 6;
+const int IR_LED = 7;
 
 // Define states
 #define Initialize 0
@@ -33,6 +35,9 @@ double pidControl(const double setPoint, const double currentPosition, const dou
 // Input: Robot current x and y coordinates
 // Output: ture if it reaches the border, false if it not
 boolean borderCheck(const Bot robot);
+
+boolean puckCaptureCheck();
+
 
 
 

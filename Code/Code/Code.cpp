@@ -28,7 +28,7 @@ boolean borderCheck(const Bot robot)
 {
   boolean atBorder = false;
   double botRadius = 8;         // robot radius in mm
-  double xBorder1 = 0;          
+  double xBorder1 = 0;
   double xBorder2 = 2100;       // in mm
   double yBorder1 = 0;
   double yBorder2 = 1050;       // in mm
