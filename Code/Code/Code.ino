@@ -1,14 +1,14 @@
 #include "Code.h"
 //#include <IRremote.h>
 
-uint8_t robotStates;      // Create global state variable
+//uint8_t robotStates;      // Create global state variable
+int robotStates;
 float RF_coordinates[6];  // Coordinates read by RF sensor
 int matchStatus;          // matchStatus = 1 -- Start
 //                                         2 -- Stop
 //                                         3 -- Read Coordinates
-char *text;              // Message read from the RF sensor
 
-
+float num[6];
 
 NRF24 radio;
 boolean puckCaptured = false;
@@ -42,16 +42,15 @@ void loop() {
          Need a boolean type function to check sound sensor and
          the RF receiver. Return true if start signal is received.
       */
-
       // Code here
       // function
-      text = RF_receiver(&radio);                   // Read RF
-      matchStatus = start_stop_message(text);       // Check matchStatus
+      matchStatus = RF_receiver(&radio, num);                  // Read RF
+//      Serial.println(matchStatus);
       if (matchStatus == 1)
         robotStates = puckSearching;
       else
         robotStates = Initialize;
-
+//      Serial.println(robotStates);
       break;
 
     case puckSearching:
@@ -67,20 +66,23 @@ void loop() {
       // Need a trajectory generating function return a vector of states?
       // Need a trajectory tracking function to follow the generated path
       // Need a boolean type function to check if the puck is captured
+//      Serial.println(robotStates);
       puckCaptured = false;
       // functions
       // 1. Get coordinates of robot and the puck
-      text = RF_receiver(&radio);                   // Read RF
-      Getcoordinates(text, RF_coordinates);         // Get coordinates
+      matchStatus = RF_receiver(&radio, RF_coordinates);                   // Read RF & Get Coordinates
+      if (matchStatus == 2){
+        robotStates = Stop;
+      }
       robotForward.x = RF_coordinates[0];
       robotForward.y = RF_coordinates[1];
       Puck.x = RF_coordinates[2];
       Puck.y = RF_coordinates[3];
       Puck.theta = NULL;
-
       // 2. PD control -- Alignment
-      float distFP = sqrt((robotForward.x - Puck.x) ^ 2 + (robotForward.y - Puck.y) ^ 2);   // Distance between robotForward and Puck
-      if (distFP > 3000)
+      float distFP = sqrt(pow((robotForward.x - Puck.x),2) + pow((robotForward.y - Puck.y),2));   // Distance between robotForward and Puck
+      
+      if (distFP > 30)
         pdControl(robotForward, Puck);
       else
       {
@@ -148,6 +150,11 @@ void loop() {
         robotStates = Attacking;
       break;
 
+    case Stop:
 
+
+    break;
+    
   }
+
 }

@@ -28,14 +28,7 @@ void pdControl(Bot& robot, Bot& obj)
   while (1 < 2) {
     res_x = return_IMU_x(&event, bno);
     //    Serial.println(res_x);
-    res = RF_receiver(&radio);
-    if (res == NULL) {
-      //      Serial.println("empty");
-      continue;
-    }
-    else {
-      Getcoordinates(res, coordinates);
-    }
+    res = RF_receiver(&radio,coordinates);
     robot.x = coordinates[0];
     robot.y = coordinates[1];
     robot.theta = res_x;

@@ -17,6 +17,7 @@
 #define puckSearching 1
 #define Attacking 2
 #define Defending 3
+#define Stop 4
 
 // Define variables
 //struct Bot {

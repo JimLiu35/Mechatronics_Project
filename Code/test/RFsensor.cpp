@@ -3,7 +3,7 @@
 void initial_RF(NRF24* radio, bool flag) {
   const int pin_CE = 9;
   const int pin_CSN = 10;
-  const int address = 0xD2;
+  const int address = 0xAA;
   radio->begin(pin_CE, pin_CSN);
   // flag = 0 sender
   // flag = 1 receiver

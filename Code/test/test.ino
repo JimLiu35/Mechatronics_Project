@@ -5,8 +5,6 @@ Pixy2I2C pixy;
 NRF24 radio;
 // for reciver
 char *res;
-const int NRF_SS = 10;
-const int Pixy_SS = 8;
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,10 +25,19 @@ void loop() {
 
   res = RF_receiver(&radio);
   if (res == NULL) {
-    Serial.println("empty");
+//    Serial.println("empty");
   }
   else {
     Serial.println(res);
   }
 //  delay(10);
+//  Serial.println("---------------------");
+//
+//  res = RF_receiver(&radio);
+//  if (res == NULL) {
+////    Serial.println("empty");
+//  }
+//  else {
+//    Serial.println(res);
+//  }
 }
