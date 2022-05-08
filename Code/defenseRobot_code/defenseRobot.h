@@ -12,7 +12,8 @@
 
 // Define states
 #define Initialize 0
-#define Defending 1
+#define Inplace 1
+#define Defending 2
 
 
 double pidControl(const double setPoint, const double currentPosition, const double targetPosition);
