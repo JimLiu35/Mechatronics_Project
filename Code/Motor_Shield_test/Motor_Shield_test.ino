@@ -15,10 +15,14 @@ void setup()
 
 void loop()
 {
-  motors.setM2Speed(speed);     // right motor viewing from the rear  // rear wheel positive move right
-  motors.setM1Speed(speed);     // left motor viewing from the rear
-  delay(1000);
-  motors.setM2Speed(-speed);     // right motor viewing from the rear
-  motors.setM1Speed(-speed);     // left motor viewing from the rear
+  //  motors.setM2Speed(speed);     // right motor viewing from the rear  // rear wheel positive move right
+  //  motors.setM1Speed(speed);     // left motor viewing from the rear
+  //  delay(1000);
+  //  motors.setM2Speed(-speed);     // right motor viewing from the rear
+  //  motors.setM1Speed(-speed);     // left motor viewing from the rear
+  //  delay(1000);
+
+  motors.setM2Speed(-speed); // CW as speed is +
+  motors.setM1Speed(speed);
   delay(1000);
 }

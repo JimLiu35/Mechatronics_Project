@@ -1,19 +1,24 @@
-
+#include "RFsensor.h"
 #include "PixyPos_defense.h"
+#include "IMUheader.h"
 #include <Pixy2I2C.h>
 #include <DRV8835MotorShield.h>
+sensors_event_t event;
+Adafruit_BNO055 bno;
+
+
 int Green_PIN = 6;
 int RED_PIN = 7;
 int robotStates;
-double kp;
+double kp = 1;
 float RF_coordinates[6];  // Coordinates read by RF sensor
 int matchStatus;          // matchStatus = 1 -- Start
 //                                         2 -- Stop
 //                                         3 -- Read Coordinates
 char *text;              // Message read from the RF sensor
 float num[6];
-//NRF24 radio;
-//boolean enemyAttacking = false;
+NRF24 radio;
+
 boolean isinField;
 
 ///////////////
@@ -29,8 +34,8 @@ uint8_t M2PWM = 5;
 DRV8835MotorShield motors = DRV8835MotorShield(M1DIR, M1PWM, M2DIR, M2PWM);
 
 ////////////////
-const int viewCenter_x = 157;
-const int viewCenter_y = 203;
+const int viewCenter_x = 160;
+const int viewCenter_y = 182;
 Pixy2I2C pixy;
 
 
@@ -38,24 +43,37 @@ Pixy2I2C pixy;
 ////////////////
 object puck;
 
+///////////////
+double prev_x;
+double curr_x;
+double ka = 1;
+double aspeed;
 
 int i;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-//  initial_RF(&radio, 1);
+  initial_RF(&radio, 1);
   robotStates = Inplace;
-  
+
   Goal.x = 15;  // self goal location
   Goal.y = 65;
   Goal.theta = NULL;
-    Serial.println("ok");
+  Serial.println("ok");
   pixy.init();
+  bno = initial_IMU();
   Serial.println("Set up");
+  
   puck.colorSig = 1;
-//  pinMode(Green_PIN, OUTPUT);
-//  pinMode(RED_PIN, OUTPUT);
+  //  pinMode(Green_PIN, OUTPUT);
+  //  pinMode(RED_PIN, OUTPUT);
 
+  prev_x = return_IMU_x(&event, bno);
+  if (prev_x > 180) {
+    prev_x = curr_x - 360;
+  }
+  Serial.println("intial angle  " );
+      Serial.println(prev_x);
 }
 
 void loop() {
@@ -71,9 +89,8 @@ void loop() {
           Return true if signal has been received
       */
       // function
-//      text = RF_receiver(&radio);                   // Read RF
+      text = RF_receiver(&radio);                   // Read RF
       matchStatus = start_stop_message(text);       // Check matchStatus
-      matchStatus = 1;
       if (matchStatus == 1)
         robotStates = Inplace;
       else
@@ -88,35 +105,63 @@ void loop() {
           2. move the place
           3. Don't enter to the goal
       */
-Serial.println("start");
+
+
+      curr_x = return_IMU_x(&event, bno);
+      if (curr_x > 180) {
+        curr_x = curr_x - 360;
+      }
+      Serial.println("current angle  " );
+      Serial.println(curr_x);
+      double angle = curr_x - prev_x;
+      double aspeed = ka * angle/180 *200;
+      Serial.println("aspeed :  " );
+      Serial.println(aspeed);
+      if (angle > 0 ) {
+        Serial.println("rotate CCW");
+        motors.setM2Speed(aspeed); // CCW
+        motors.setM1Speed(-aspeed);
+      }
+      else if (angle < 0 ) {
+        Serial.println("rotate CW");
+        motors.setM2Speed(aspeed); // CW
+        motors.setM1Speed(-aspeed);
+      }
+
+
+
+
+
+
+      //      Serial.println("start");
       isinField = objPosition(puck, i, pixy);  // see the puck
-      Serial.println(isinField);
+      //      Serial.println(isinField);
       if (isinField) {
-        if (puck.object_x - viewCenter_x < -40)
+        if (puck.object_x - viewCenter_x < -20)
         {
           // Move to left
           Serial.println("move to left");
-          motors.setM2Speed(-200);
-          motors.setM1Speed(-200);
+          motors.setM2Speed(-150);
+          motors.setM1Speed(-150);
 
         }
-        else if (puck.object_x - viewCenter_x > 40)
+        else if (puck.object_x - viewCenter_x > 20)
         {
           // Move to right
           Serial.println("move to right");
-          motors.setM2Speed(200);
-          motors.setM1Speed(200);
+          motors.setM2Speed(150);
+          motors.setM1Speed(150);
 
         }
         else
         {
           Serial.println("right front to the ball");
-          motors.setM2Speed(10);
-          motors.setM1Speed(10);
-          delay(200);
-          motors.setM2Speed(10);
-          motors.setM1Speed(10);
-          delay(200);
+          motors.setM2Speed(50);
+          motors.setM1Speed(50);
+          delay(1000);
+          motors.setM2Speed(50);
+          motors.setM1Speed(50);
+          delay(1000);
 
 
         }
@@ -124,40 +169,56 @@ Serial.println("start");
       else
       {
         /* cannot seen then listen to RF instruction */
-        //        text = RF_receiver(&radio);                   // Read RF
-        //        Getcoordinates(text, RF_coordinates);         // Get coordinates
-        //        robotDefense.x = RF_coordinates[3];
-        //        robotDefense.y = RF_coordinates[4];
-        //        Puck.x = RF_coordinates[5];
-        //        Puck.y = RF_coordinates[6];
-        //        float distDP = sqrt(pow((robotDefense.x - Puck.x), 2) + pow((robotDefense.y - Puck.y), 2));
-        //        // Distance between Puck and Defense robot
-        //        int diff_y = (robotDefense.y - Puck.y);
-        //        int diff_x = abs(robotDefense.x - Puck.x);
-        //        int pdSpeed = kp * (diff_y) * 200;
-        //        if (diff_x < 50)
-        //          // if puck is in blind area but very closee
-        //        {
-        //          if (abs(diff_y) <= 5) {
-        //            // in the center
-        //            motors.setM2Speed(0);
-        //            motors.setM1Speed(0);
-        //          }
-        //          else if ((diff_y) < -5) {
-        //            // on the left side
-        //            // move left
-        //            motors.setM2Speed(-pdSpeed);
-        //            motors.setM1Speed(-pdSpeed);
-        //          }
-        //          else if ((diff_y) > 5) {
-        //            // on the right side
-        //            motors.setM2Speed(pdSpeed);
-        //            motors.setM1Speed(pdSpeed);
-        //          }
-        //        }
-        //        else {
-        //          robotStates = Inplace;
-        //        }
+        /*text = RF_receiver(&radio);                   // Read RF
+          Getcoordinates(text, RF_coordinates);         // Get coordinates
+          robotDefense.x = RF_coordinates[3];
+          robotDefense.y = RF_coordinates[4];
+          Puck.x = RF_coordinates[5];
+          Puck.y = RF_coordinates[6];
+          float distDP = sqrt(pow((robotDefense.x - Puck.x), 2) + pow((robotDefense.y - Puck.y), 2));
+          // Distance between Puck and Defense robot
+          int diff_y = (robotDefense.y - Puck.y);
+          int diff_x = abs(robotDefense.x - Puck.x);
+          int pdSpeed = kp * (diff_y) * 200;
+          if (diff_x < 50)
+          // if puck is in blind area but very closee
+          {
+          if (abs(diff_y) <= 5) {
+            // in the center
+            motors.setM2Speed(0);
+            motors.setM1Speed(0);
+          }
+          else if ((diff_y) < -5) {
+            // on the left side
+            // move left
+            motors.setM2Speed(-pdSpeed);
+            motors.setM1Speed(-pdSpeed);
+          }
+          else if ((diff_y) > 5) {
+            // on the right side
+            motors.setM2Speed(pdSpeed);
+            motors.setM1Speed(pdSpeed);
+          }
+          }
+          else {
+          robotStates = Inplace;
+          }*/
+        Serial.println("no sure where it it");
+        motors.setM2Speed(80);
+        motors.setM1Speed(80);
+        delay(1000);
+        motors.setM2Speed(-80);
+        motors.setM1Speed(-80);
+        delay(1000);
+
       }
+    case Stop:
+      motors.setM2Speed(0);
+      motors.setM1Speed(0);
+
+      break;
+
+
+
   }
 }
