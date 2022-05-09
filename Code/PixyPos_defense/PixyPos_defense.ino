@@ -2,69 +2,42 @@
 //#include <Pixy2.h>
 #include <Pixy2I2C.h>
 #include <DRV8835MotorShield.h>
-uint8_t M1DIR = 2;
-uint8_t M1PWM = 3;
-uint8_t M2DIR = 4;
-uint8_t M2PWM = 5;
-DRV8835MotorShield motors = DRV8835MotorShield(M1DIR, M1PWM, M2DIR, M2PWM);
+int Green_PIN = 6;
+int RED_PIN = 7;
+
 
 Pixy2I2C pixy;
-
-const int viewCenter_x = 157;
-const int viewCenter_y = 203;
+//
+//const int viewCenter_x = 157;
+//const int viewCenter_y = 203;
 
 object puck;
+object defenseRobot;
 boolean isinField;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   pixy.init();
   puck.colorSig = 1;
+  pinMode(Green_PIN,OUTPUT);
+  pinMode(RED_PIN,OUTPUT);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int i;
-  isinField = objPosition(puck, i, pixy);
-
-  //  Serial.println(isinField);
-
-  if (isinField) {
-    if (puck.object_x - viewCenter_x < -10)
-    {
-      // Move to left
-      //      Serial.println("move to left");
-      motors.setM2Speed(-200);
-      motors.setM1Speed(-200);
-    }
-    else if (puck.object_x - viewCenter_x > 10)
-    {
-      // Move to right
-      //      Serial.println("move to right");
-      motors.setM2Speed(200);
-      motors.setM1Speed(200);
-    }
-    else
-    {
-      //      Serial.println("right front to the ball");
-      motors.setM2Speed(10);
-      motors.setM1Speed(10);
-      delay(200);
-      motors.setM2Speed(10);
-      motors.setM1Speed(10);
-      delay(200);
-
-    }
+  if (pixyControl(defenseRobot, puck)){
+  Serial.print("True");
+  digitalWrite(Green_PIN,HIGH);
+  digitalWrite(RED_PIN,LOW);
   }
   else
   {
-    //     Serial.println("wondering");
-    motors.setM2Speed(50);
-    motors.setM1Speed(50);
-    delay(1000);
-    motors.setM2Speed(-50);
-    motors.setM1Speed(-50);
-    delay(1000);
+  Serial.print("False");
+  digitalWrite(Green_PIN,LOW);
+  digitalWrite(RED_PIN,HIGH);
   }
+// catch the ball
+// attack robot go to the goal
+// defense robot 
 
 }
