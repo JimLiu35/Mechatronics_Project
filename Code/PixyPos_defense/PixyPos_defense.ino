@@ -27,40 +27,44 @@ void loop() {
   int i;
   isinField = objPosition(puck, i, pixy);
 
-//  Serial.println(isinField);
+  //  Serial.println(isinField);
 
   if (isinField) {
     if (puck.object_x - viewCenter_x < -10)
     {
       // Move to left
-//      Serial.println("move to left");
+      //      Serial.println("move to left");
       motors.setM2Speed(-200);
       motors.setM1Speed(-200);
     }
     else if (puck.object_x - viewCenter_x > 10)
     {
       // Move to right
-//      Serial.println("move to right");
+      //      Serial.println("move to right");
       motors.setM2Speed(200);
       motors.setM1Speed(200);
     }
     else
     {
-//      Serial.println("right front to the ball");
-      motors.setM2Speed(0);
-      motors.setM1Speed(0);
+      //      Serial.println("right front to the ball");
+      motors.setM2Speed(10);
+      motors.setM1Speed(10);
+      delay(200);
+      motors.setM2Speed(10);
+      motors.setM1Speed(10);
+      delay(200);
 
     }
   }
   else
   {
-//     Serial.println("wondering");
-    motors.setM2Speed(100);
-    motors.setM1Speed(100);
-    delay(200);
-    motors.setM2Speed(-100);
-    motors.setM1Speed(-100);
-    delay(200);
+    //     Serial.println("wondering");
+    motors.setM2Speed(50);
+    motors.setM1Speed(50);
+    delay(1000);
+    motors.setM2Speed(-50);
+    motors.setM1Speed(-50);
+    delay(1000);
   }
 
 }
