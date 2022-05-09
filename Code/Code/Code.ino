@@ -15,6 +15,9 @@ boolean puckCaptured = false;
 Bot robotForward;
 Bot Puck;
 Bot Goal;
+object robotForward_pixy;
+object puck_pixy;
+Pixy2I2C pixy;
 
 uint8_t M1DIR = 2;
 uint8_t M1PWM = 3;
@@ -36,9 +39,13 @@ void setup() {
   Goal.theta = NULL;
   pinMode(IR_LED, OUTPUT);
   //  Serial.println("Inializing...");
+  puck_pixy.colorSig = 5;
+  boolean capture = pixyControl(robotForward_pixy, puck_pixy, pixy);
+  
 }
 
 void loop() {
+  int i;
   // put your main code here, to run repeatedly:
   switch (robotStates) {
     case Initialize:
@@ -92,20 +99,23 @@ void loop() {
       // 2. PD control -- Alignment
       float distFP = sqrt(pow((robotForward.x - Puck.x), 2) + pow((robotForward.y - Puck.y), 2)); // Distance between robotForward and Puck
 
-      if (distFP > 30)
-      {
-        //        Serial.println("Working!!!");
-        Control(robotForward, Puck);
-      }
+      Control(robotForward, Puck, pixy);
 
-      else
-      {
-        // pixy control
-        // puckCaptured = pixyControl();
-      }
+      // pixy control
+      
+      
+      puckCaptured = pixyControl(robotForward_pixy, puck_pixy, pixy);
+      
+
 
       if (puckCaptured == false)
+      {
+        motors.setM2Speed(-200);
+        motors.setM1Speed(-200);
+        delay(100);
         robotStates = puckSearching;
+      }
+
       else
         robotStates = Attacking;
       break;
@@ -127,15 +137,15 @@ void loop() {
 
       // 1. Check if the puck is still captured.
       // 2. PD control to goal
-      float distFG = sqrt((robotForward.x - Goal.x) ^ 2 + (robotForward.y - Goal.y) ^ 2);     // Distance between robotForward and Goal
-      if (distFG > 3000)
-        Control(robotForward, Goal);
-      else
-      {
-        // Moving forward
-        motors.setM2Speed(400);
-        motors.setM1Speed(400);
-      }
+      //      float distFG = sqrt((robotForward.x - Goal.x) ^ 2 + (robotForward.y - Goal.y) ^ 2);     // Distance between robotForward and Goal
+      //      if (distFG > 3000)
+      Control(robotForward, Goal, pixy);
+      //      else
+      //      {
+      //        // Moving forward
+      //        motors.setM2Speed(400);
+      //        motors.setM1Speed(400);
+      //      }
 
       if (puckCaptured == false)
         robotStates = puckSearching;

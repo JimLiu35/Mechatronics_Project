@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 
-void Control(Bot& robot, Bot& obj)
+void Control(Bot& robot, Bot& obj, Pixy2I2C pixy)
 {
   double Setpoint;
   float coordinates[6];  // Coordinates read by RF sensor
@@ -37,7 +37,13 @@ void Control(Bot& robot, Bot& obj)
     obj.x = coordinates[4];
     obj.y = coordinates[5];
     obj.theta = NULL;
-    float dist = sqrt(pow((robot.x - obj.x), 2) + pow((robot.y - obj.y), 2));
+    pixy.ccc.getBlocks();
+    if (pixy.ccc.numBlocks) {
+      motors.setM2Speed(0);
+      motors.setM1Speed(0);
+      break;
+    }
+    //    float dist = sqrt(pow((robot.x - obj.x), 2) + pow((robot.y - obj.y), 2));
     //        Serial.print("Robot's x coordinates: ");
     //        Serial.print(robot.x);
     //        Serial.print(", Robot's y coordinates: ");
@@ -53,19 +59,19 @@ void Control(Bot& robot, Bot& obj)
     //    }
 
     Setpoint = (double)atan2((obj.y - robot.y), (obj.x - robot.x)) * 180 / PI;
-    Serial.print("Current orientation is ");
-    Serial.print(robot.theta);
+    //    Serial.print("Current orientation is ");
+    //    Serial.print(robot.theta);
     //        Serial.print(" deg.");
     //    Serial.print(" Setpoint is ");
     //    Serial.print(Setpoint);
-    Serial.println(" deg.");
+    //    Serial.println(" deg.");
 
     double ang_diff = Setpoint - robot.theta;
 
     //      int speedAdj = constrain(Output, -400, 400);
-    Serial.print("Current ang_diffi is ");
+    //    Serial.print("Current ang_diffi is ");
     //    Serial.println(Output);
-    Serial.println(ang_diff);
+    //    Serial.println(ang_diff);
 
     if (ang_diff < -20) {
       // Move to left

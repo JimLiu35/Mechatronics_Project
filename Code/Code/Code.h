@@ -8,6 +8,8 @@
 //#include "pdController.h"
 #include "Controller.h"
 #include "IRCheck.h"
+#include "PixyPos.h"
+#include <Pixy2I2C.h>
 #include <DRV8835MotorShield.h>
 //#include <Arduino_AVRSTL.h>
 

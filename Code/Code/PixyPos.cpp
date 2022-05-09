@@ -5,7 +5,7 @@
 //object puck;
 //boolean isinField;
 
-boolean pixyControl(object& robot, object& puck) {
+boolean pixyControl(object& robot, object& puck, Pixy2I2C pixy) {
   uint8_t M1DIR = 2;
   uint8_t M1PWM = 3;
   uint8_t M2DIR = 4;
@@ -17,51 +17,51 @@ boolean pixyControl(object& robot, object& puck) {
   const int viewCenter_y = 100;
 
 
-  Pixy2I2C pixy;
+
   boolean catchPuck;
   boolean isinField;
-  puck.colorSig = 5;
-  int i;
+
+
   while (1 < 2) {
+    int i;
     isinField = objPosition(puck, i, pixy);
     if (isinField) {
       if (puck.object_x - viewCenter_x < -40)
       {
         // Move to left
-        //      Serial.println("Working1");
+              Serial.println("Working1");
         motors.setM2Speed(200);
         motors.setM1Speed(100);
       }
       else if (puck.object_x - viewCenter_x > 40)
       {
         // Move to right
-        //      Serial.println("Working2");
+              Serial.println("Working2");
         motors.setM2Speed(100);
         motors.setM1Speed(200);
       }
       else
       {
-        //      Serial.println("Working3");
+              Serial.println("Working3");
         motors.setM2Speed(200);
         motors.setM1Speed(200);
       }
-      
+
       catchPuck = false;
     }
     else
     {
       if (abs(puck.object_x - viewCenter_x) < 40 && puck.object_y > 150) {
-        //      Serial.println("Working4");
+        Serial.println("Working4");
         motors.setM2Speed(200);
         motors.setM1Speed(200);
-//        catchPuck = puckCaptureCheck();
+        delay(100);
+        catchPuck = puckCaptureCheck();
         if (catchPuck == true)
-        catchPuck = true;
-
+          return true;
+        else
+          return false;
       }
-    }
-    if (catchPuck == true) {
-      return true;
     }
   }
 }

@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <Pixy2I2C.h>
 #include <DRV8835MotorShield.h>
+#include "IRCheck.h"
 
 
 struct object {
@@ -13,6 +14,6 @@ struct object {
 };
 
 boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy);
-boolean pixyControl(object& robot, object& puck);
+boolean pixyControl(object& robot, object& puck, Pixy2I2C pixy);
 
 #endif
