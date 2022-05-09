@@ -114,19 +114,19 @@ void loop() {
       Serial.println("current angle  " );
       Serial.println(curr_x);
       double angle = curr_x - prev_x;
-      int aspeed = ka* map(abs(angle),0,90,0,100);
+      int aspeed = ka* map(abs(angle),0,90,0,100) + 30;
       Serial.println("aspeed :  " );
       Serial.println(aspeed);
-      if (angle > 30 ) {
+      if (angle > 10 ) {
         Serial.println("rotate CCW");
         motors.setM2Speed(aspeed); // CCW
         motors.setM1Speed(-aspeed);
         delay(200);
       }
-      else if (angle < -30 ) {
+      else if (angle < -10 ) {
         Serial.println("rotate CW");
-        motors.setM2Speed(aspeed); // CW
-        motors.setM1Speed(-aspeed);
+        motors.setM2Speed(-aspeed); // CW
+        motors.setM1Speed(aspeed);
         delay(200);
       }
 
@@ -139,20 +139,22 @@ void loop() {
       isinField = objPosition(puck, i, pixy);  // see the puck
       //      Serial.println(isinField);
       if (isinField) {
-        if (puck.object_x - viewCenter_x < 10)
+        if (puck.object_x - viewCenter_x < -10)
         {
           // Move to left
           Serial.println("move to left");
-          motors.setM2Speed(150);
-          motors.setM1Speed(150);
+          motors.setM2Speed(-150);
+          motors.setM1Speed(-150);
+          delay(200);
 
         }
-        else if (puck.object_x - viewCenter_x > -10)
+        else if (puck.object_x - viewCenter_x > 10)
         {
           // Move to right
           Serial.println("move to right");
-          motors.setM2Speed(-150);
-          motors.setM1Speed(-150);
+          motors.setM2Speed(150);
+          motors.setM1Speed(150);
+          delay(200);
 
         }
         else
@@ -160,10 +162,10 @@ void loop() {
           Serial.println("right front to the ball");
           motors.setM2Speed(50);
           motors.setM1Speed(50);
-          delay(500);
+          delay(200);
           motors.setM2Speed(50);
           motors.setM1Speed(50);
-          delay(500);
+          delay(200);
 
 
         }
@@ -208,15 +210,16 @@ void loop() {
         Serial.println("no sure where is it");
         motors.setM2Speed(30);
         motors.setM1Speed(30);
-        delay(200);
+         delay(200);
         motors.setM2Speed(-30);
         motors.setM1Speed(-30);
-        delay(200);
+         delay(200);
 
       }
     case Stop:
       motors.setM2Speed(0);
       motors.setM1Speed(0);
+      delay(100);
 
       break;
 
