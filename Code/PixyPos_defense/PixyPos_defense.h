@@ -3,15 +3,27 @@
 
 #include <Arduino.h>
 #include <Pixy2I2C.h>
-//#include <Pixy2.h>
+//#include <SPI.h>
+//#include <NRF24.h>
+#include "Getcoordinates.h"
+//#include "RFsensor.h"
 #include <DRV8835MotorShield.h>
-#include <IRremote.h>
+
+#define Initialize 0
+#define Inplace 1
+#define Defending 2
+#define Stop 3
+
 struct object {
   int colorSig;
   int object_x;
   int object_y;
 };
-
+struct Bot {
+  int x;
+  int y;
+  int theta;
+};
 boolean objPosition(object &obj, int loopIndex, Pixy2I2C pixy);
-boolean pixyControl(object& robot, object& puck);
+
 #endif
