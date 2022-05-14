@@ -96,19 +96,28 @@ void loop()
 
   switch (robotStates) {
     case Initialize: {
-        //      Serial.println("Initialize!");
+        //              Serial.println("Initialize!");
         if (radio.available())
         {
           //          Serial.println("Im here!");
           uint8_t numBytes = radio.read(buf, sizeof(buf));
-          Serial.println(buf);
-          if (buf[1] == '!' && buf[2] == '!' && buf[3] == '!')
+          //          Serial.println(buf);
+          if (int(buf[1]) == 33 && int(buf[2]) == 33 && int(buf[3]) == 33)
           {
-            Serial.println("Start signal!");
+            //            Serial.println("Start signal!");
             matchStatus = 1;
           }
+          else if (int(buf[1]) == 63 && int(buf[2]) == 63 && int(buf[3]) == 63)
+          {
+            matchStatus = 2;
+          }
+          else
+          {
+            matchStatus = 3;
+          }
+
         }
-        if (matchStatus == 1)
+        if (matchStatus != 2)
         {
           pixy.ccc.getBlocks();
 
@@ -128,11 +137,11 @@ void loop()
           else
           {
             // Enable or Disable nrfControl
-//            Serial.println("Here");
-//            motors.setM1Speed(80);
-//            motors.setM2Speed(80);
-//            delay(100);
-//            robotStates = Initialize;
+            //            Serial.println("Here");
+            //            motors.setM1Speed(80);
+            //            motors.setM2Speed(80);
+            //            delay(100);
+            //            robotStates = Initialize;
             robotStates = nrfControl;
             break;
           }
@@ -142,16 +151,21 @@ void loop()
           robotStates = Initialize;
           break;
         }
+        robotStates = Initialize;
+        break;
       }
 
     case nrfControl: {
-        Serial.println("nrfControl");
+        //        Serial.println("nrfControl");
         if (radio.available())
         {
+
           uint8_t numBytes = radio.read(buf, sizeof(buf));
-          if (buf[1] == '?' && buf[2] == '?' && buf[3] == '?')
+          if (int(buf[1]) == 63 && int(buf[2]) == 63 && int(buf[3]) == 63)
           {
-            robotStates = Stop;
+            //            Serial.println("Working!!!");
+            robotStates = Initialize;
+            break;
           }
           float first_x = int(buf[1] - 48) * 100 + int(buf[2] - 48) * 10 + int(buf[3] - 48) * 1 + int(buf[4] - 48) * 0.1;
           float first_y = int(buf[6] - 48) * 100 + int(buf[7] - 48) * 10 + int(buf[8] - 48) * 1 + int(buf[9] - 48) * 0.1;
@@ -166,21 +180,21 @@ void loop()
           coordinates[4] = third_x;
           coordinates[5] = third_y;
         }
-        robotForward.x = coordinates[0];
-        robotForward.y = coordinates[1];
+        robotForward.x = coordinates[2];
+        robotForward.y = coordinates[3];
         Puck.x = coordinates[4];
         Puck.y = coordinates[5];
         robotForward.theta = return_IMU_x(&event, bno);
-        
+
         if (robotForward.theta > 180) {
           robotForward.theta = robotForward.theta - 360;
         }
-        
+
         float dx = Puck.x - robotForward.x;
         float dy = Puck.y - robotForward.y;
         float setPoint = atan2(dy, dx) * 180 / PI;
         float ang_diff = setPoint - robotForward.theta;
-//        Serial.println(setPoint);
+        //        Serial.println(setPoint);
         if (ang_diff > 8)
         {
           // move to right
@@ -220,12 +234,16 @@ void loop()
 
 
     case pixyControl: {
+        //      Serial.println("pixyControl");
         if (radio.available())
         {
+
           uint8_t numBytes = radio.read(buf, sizeof(buf));
-          if (buf[1] == '?' && buf[2] == '?' && buf[3] == '?')
+          if (int(buf[1]) == 63 && int(buf[2]) == 63 && int(buf[3]) == 63)
           {
-            robotStates = Stop;
+            //            Serial.println("Working!!!");
+            robotStates = Initialize;
+            break;
           }
         }
         pixy.ccc.getBlocks();
@@ -238,25 +256,25 @@ void loop()
             if (Puck.pixy_x - viewCenter_x <= -30)
             {
               // Moving to the left
-              Serial.println("moving to the left");
-              motors.setM2Speed(100);
-              motors.setM1Speed(-100);
+              //              Serial.println("moving to the left");
+              motors.setM2Speed(80);
+              motors.setM1Speed(-80);
               delay(100);
             }
             else if (Puck.pixy_x - viewCenter_x >= 30)
             {
               // Moving to the right
-              Serial.println("moving to the right");
-              motors.setM2Speed(-100);
-              motors.setM1Speed(100);
+              //              Serial.println("moving to the right");
+              motors.setM2Speed(-80);
+              motors.setM1Speed(80);
               delay(100);
             }
             else
             {
-              Serial.println("Center");
-              motors.setM2Speed(200);
-              motors.setM1Speed(200);
-              delay(100);
+              //              Serial.println("Center");
+              motors.setM2Speed(100);
+              motors.setM1Speed(100);
+              delay(200);
             }
           }
           if (Puck.pixy_y > 170 && pixy.ccc.blocks[i].m_width > 160)
@@ -281,13 +299,16 @@ void loop()
 
 
     case Attacking: {
-        Serial.println("Attack");
+        //        Serial.println("Attack");
         if (radio.available())
         {
+
           uint8_t numBytes = radio.read(buf, sizeof(buf));
-          if (buf[1] == '?' && buf[2] == '?' && buf[3] == '?')
+          if (int(buf[1]) == 63 && int(buf[2]) == 63 && int(buf[3]) == 63)
           {
-            robotStates = Stop;
+            //            Serial.println("Working!!!");
+            robotStates = Initialize;
+            break;
           }
           float first_x = int(buf[1] - 48) * 100 + int(buf[2] - 48) * 10 + int(buf[3] - 48) * 1 + int(buf[4] - 48) * 0.1;
           float first_y = int(buf[6] - 48) * 100 + int(buf[7] - 48) * 10 + int(buf[8] - 48) * 1 + int(buf[9] - 48) * 0.1;
@@ -295,17 +316,17 @@ void loop()
           float second_y = int(buf[16] - 48) * 100 + int(buf[17] - 48) * 10 + int(buf[18] - 48) * 1 + int(buf[19] - 48) * 0.1;
           float third_x = int(buf[21] - 48) * 100 + int(buf[22] - 48) * 10 + int(buf[23] - 48) * 1 + int(buf[24] - 48) * 0.1;
           float third_y = int(buf[26] - 48) * 100 + int(buf[27] - 48) * 10 + int(buf[28] - 48) * 1 + int(buf[29] - 48) * 0.1;
-          coordinates[0] = 100;
-          coordinates[1] = 50;
+          coordinates[0] = first_x;
+          coordinates[1] = first_y;
           coordinates[2] = second_x;
           coordinates[3] = second_y;
           coordinates[4] = third_x;
           coordinates[5] = third_y;
         }
-        //        robotForward.x = coordinates[0];
-        //        robotForward.y = coordinates[1];
-        robotForward.x = 110;
-        robotForward.y = 30;
+        robotForward.x = coordinates[2];
+        robotForward.y = coordinates[3];
+        //        robotForward.x = 110;
+        //        robotForward.y = 30;
         Puck.x = coordinates[4];
         Puck.y = coordinates[5];
         robotForward.theta = return_IMU_x(&event, bno);
@@ -331,21 +352,43 @@ void loop()
         }
         else
         {
-          motors.setM2Speed(100);
-          motors.setM1Speed(100);
+          motors.setM2Speed(200);
+          motors.setM1Speed(200);
           delay(100);
         }
-        capture = true;
-        if (capture == true)
-        {
-          robotStates = Attacking;
-          break;
+        pixy.ccc.getBlocks();
+        if (pixy.ccc.numBlocks) {
+          if (Puck.pixy_y > 170 && pixy.ccc.blocks[i].m_width > 160)
+          {
+            capture = true;
+            robotStates = Attacking;
+            break;
+          }
+          else
+          {
+            capture = false;
+            robotStates = pixyControl;
+            break;
+          }
         }
         else
         {
-          robotStates = pixyControl;
+          capture = false;
+          robotStates = nrfControl;
           break;
         }
+        robotStates = nrfControl;
+        break;
+//        if (capture == true)
+//        {
+//          robotStates = Attacking;
+//          break;
+//        }
+//        else
+//        {
+//          robotStates = pixyControl;
+//          break;
+//        }
 
 
 
@@ -357,12 +400,13 @@ void loop()
       }
 
 
-      case Stop :{
-          motors.setM2Speed(0);
-          motors.setM1Speed(0);
-          delay(20000);
-          robotState = Stop;
-          break;
+    case Stop : {
+        //        Serial.println("Stopping");
+        motors.setM2Speed(0);
+        motors.setM1Speed(0);
+        delay(20000);
+        robotStates = Stop;
+        break;
       }
 
 
